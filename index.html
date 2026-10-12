@@ -59,12 +59,13 @@ p { margin: 0; }
 .label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
 
 /* Masthead */
-.mast { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--bg); }
+.mast { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--bg); }
 .mast .name { font-family: var(--font-display); font-size: 1.15rem; }
 .mast nav { display: flex; gap: 8px; }
-.mast nav a { font-size: .85rem; font-weight: 600; text-decoration: none; color: var(--fg); padding: 6px 14px; border-radius: 999px; border: 1.5px solid var(--line); }
-.mast nav a:first-child { border-color: var(--en); color: var(--en); }
-.mast nav a:last-child { border-color: var(--es); color: var(--es); }
+.mast nav button { font: 600 .9rem var(--font-body); min-height: 38px; padding: 6px 18px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: transparent; cursor: pointer; }
+.mast nav button[data-view="es"] { --c: var(--en); }
+.mast nav button[data-view="en"] { --c: var(--es); }
+.mast nav button[aria-pressed="true"] { background: var(--c); color: var(--bg); }
 
 /* Halves */
 .halves { display: grid; grid-template-columns: 1fr; }
@@ -79,6 +80,11 @@ p { margin: 0; }
   .mast nav { display: none; }
 }
 .accent { color: var(--accent); }
+/* En el celular se ve un idioma a la vez; el botón de arriba cambia entre español e inglés. */
+@media (max-width: 899px) {
+  body[data-view="en"] #es { display: none; }
+  body:not([data-view="en"]) #en { display: none; }
+}
 
 .hero { padding-block: 52px 40px; display: grid; gap: 22px; }
 .hero h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); }
@@ -88,7 +94,7 @@ p { margin: 0; }
 .qs li:last-child { border-bottom: 1px solid var(--line); }
 .qs li::before { content: ""; position: absolute; left: 0; top: 19px; bottom: 19px; width: 4px; border-radius: 2px; background: var(--accent); }
 .btn { display: inline-flex; align-items: center; min-height: 48px; padding: 12px 22px; border-radius: 999px; font: 600 1rem var(--font-body); text-decoration: none; cursor: pointer; border: 2px solid transparent; background: var(--fg); color: var(--bg); justify-self: start; }
-.btn:focus-visible, .book:focus-visible, .copy:focus-visible, .mast a:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.btn:focus-visible, .book:focus-visible, .copy:focus-visible, .mast button:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
 
 .slogan { padding-block: 36px; border-top: 1px solid var(--line); display: grid; gap: 14px; }
 .slogan .big { font-family: var(--font-display); font-size: clamp(1.8rem, 3.8vw, 2.5rem); line-height: 1.15; text-wrap: balance; }
@@ -150,7 +156,7 @@ footer.foot { margin-top: 24px; color: var(--muted); font-size: .88rem; }
 <body>
 <header class="mast">
   <span class="name">Roxanne Bonanno</span>
-  <nav aria-label="Idioma / Language"><a href="#es">Español</a><a href="#en">English</a></nav>
+  <nav aria-label="Idioma / Language"><button type="button" data-view="es" aria-pressed="true">Español</button><button type="button" data-view="en" aria-pressed="false">English</button></nav>
 </header>
 
 <main class="halves">
@@ -388,6 +394,14 @@ document.querySelectorAll(".shelf").forEach(shelf => {
     shelf.appendChild(btn);
   });
 });
+
+const viewBtns = document.querySelectorAll(".mast nav button");
+function setView(v) {
+  document.body.dataset.view = v;
+  viewBtns.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
+}
+viewBtns.forEach(b => b.addEventListener("click", () => { setView(b.dataset.view); window.scrollTo(0, 0); }));
+setView(location.hash === "#en" ? "en" : "es");
 
 function selectNum(btn) {
   const r = document.createRange(); r.selectNodeContents(btn.parentElement.querySelector(".num"));
