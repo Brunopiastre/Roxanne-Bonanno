@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Roxanne Bonanno · Clases de inglés y castellano</title>
+<meta name="description" content="Clases individuales de inglés y castellano con Roxanne Bonanno. Un vínculo real entre profesora y alumno, con libros y audiolibros para leer juntos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Young+Serif&display=swap">
+<style>
+/* Layout: single column, wide hero with two-colour language words, shelf of flip-open books, closing contact band.
+   English = blue, Castellano = vermilion. Those two hues carry the whole page. */
+:root {
+  --bg: #f1f4f9;
+  --surface: #ffffff;
+  --fg: #14203a;
+  --muted: #536079;
+  --line: #d8dfea;
+  --en: #1d4ed8;
+  --es: #c8401f;
+  --shelf: #c9d2e1;
+  --on-accent: #ffffff;
+  --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --font-body: "Albert Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1527; --surface: #162038; --fg: #e8eefb; --muted: #9ba9c5; --line: #26324f;
+    --en: #86a8ff; --es: #ff8f70; --shelf: #26324f; --on-accent: #0e1527;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1527; --surface: #162038; --fg: #e8eefb; --muted: #9ba9c5; --line: #26324f;
+  --en: #86a8ff; --es: #ff8f70; --shelf: #26324f; --on-accent: #0e1527;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 17px; line-height: 1.6;
+  padding-inline: 20px; padding-block: 0 48px;
+}
+.wrap { max-width: 1040px; margin-inline: auto; }
+h1, h2, h3 { font-family: var(--font-display); font-weight: 400; line-height: 1.12; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+.en { color: var(--en); }
+.es { color: var(--es); }
+.label { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+/* Hero */
+.hero { padding-block: 64px 48px; display: grid; gap: 24px; }
+.hero h1 { font-size: clamp(2.5rem, 7.5vw, 5rem); max-width: 14ch; }
+.hero .sub-en { font-family: var(--font-display); font-size: clamp(1.15rem, 2.6vw, 1.5rem); color: var(--en); }
+.hero .lead { max-width: 58ch; color: var(--muted); font-size: 1.1rem; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-top: 4px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 12px 22px;
+  border-radius: 999px; font: 600 1rem var(--font-body); text-decoration: none; cursor: pointer; border: 2px solid transparent;
+}
+.btn-wa { background: var(--fg); color: var(--bg); }
+.btn-ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+.btn:focus-visible, .book:focus-visible, .copy:focus-visible { outline: 3px solid var(--en); outline-offset: 3px; }
+
+/* Method */
+.method { padding-block: 40px; border-top: 1px solid var(--line); display: grid; gap: 28px; }
+.method h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); max-width: 22ch; }
+.points { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 28px; }
+.point { display: grid; gap: 8px; align-content: start; padding-top: 14px; border-top: 3px solid var(--en); }
+.point:nth-child(2) { border-top-color: var(--es); }
+.point:nth-child(3) { border-top-color: var(--fg); }
+.point h3 { font-size: 1.25rem; }
+.point p { color: var(--muted); font-size: 1rem; }
+
+/* Library */
+.library { padding-block: 48px 24px; border-top: 1px solid var(--line); }
+.lib-head { display: grid; gap: 10px; margin-bottom: 32px; }
+.lib-head h2 { font-size: clamp(1.7rem, 4vw, 2.4rem); max-width: 20ch; }
+.lib-head p { color: var(--muted); max-width: 56ch; }
+.shelf {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 28px 24px;
+  padding-bottom: 26px; position: relative; justify-items: center;
+}
+.shelf::after {
+  content: ""; position: absolute; left: -8px; right: -8px; bottom: 0; height: 14px;
+  background: var(--shelf); border-radius: 3px;
+}
+.book { perspective: 1100px; width: 100%; max-width: 220px; aspect-ratio: 2 / 3; padding: 0; border: 0; background: none; cursor: pointer; text-align: left; font: inherit; color: inherit; position: relative; z-index: 1; }
+.inner { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.3,.7,.2,1); transform-origin: left center; display: block; }
+.book[aria-expanded="true"] .inner { transform: rotateY(-180deg); }
+.book:hover .inner { transform: rotateY(-8deg); }
+.book[aria-expanded="true"]:hover .inner { transform: rotateY(-180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 4px 10px 10px 4px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 22px rgba(10,20,45,.22); }
+.front { padding: 16px 16px 18px 22px; color: var(--cv-fg); background: var(--cv-bg); }
+.front::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 9px; background: rgba(0,0,0,.22); }
+.front .tag { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; font-weight: 600; opacity: .85; }
+.front svg { width: 62%; margin: auto; display: block; color: var(--cv-accent); }
+.front .t { font-family: var(--font-display); font-size: 1.3rem; line-height: 1.1; display: block; }
+.front .a { font-size: .78rem; margin-top: 6px; opacity: .85; display: block; }
+.back { transform: rotateY(180deg); background: var(--surface); color: var(--fg); padding: 16px 16px 16px 18px; border: 1px solid var(--line); gap: 8px; }
+.back .bt { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.15; display: block; }
+.back .ba { font-size: .78rem; color: var(--muted); display: block; }
+.back .bd { font-size: .84rem; line-height: 1.4; color: var(--fg); display: block; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: auto; }
+.chip { font-size: .7rem; font-weight: 600; padding: 3px 9px; border-radius: 999px; border: 1.5px solid currentColor; }
+.chip.en { color: var(--en); } .chip.es { color: var(--es); } .chip.au { color: var(--fg); }
+.hint { margin-top: 20px; color: var(--muted); font-size: .92rem; }
+
+/* Contact */
+.contact { margin-top: 40px; padding: 36px 28px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); display: grid; gap: 22px; }
+.contact h2 { font-size: clamp(1.6rem, 4vw, 2.2rem); max-width: 22ch; }
+.contact p { color: var(--muted); max-width: 56ch; }
+.num-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.num { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: .02em; font-variant-numeric: tabular-nums; user-select: all; }
+.copy { min-height: 40px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--line); background: transparent; color: var(--fg); font: 600 .9rem var(--font-body); cursor: pointer; }
+footer { margin-top: 28px; color: var(--muted); font-size: .9rem; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) { .inner { transition: none; } }
+@media (max-width: 480px) { .contact { padding: 28px 20px; } .shelf { grid-template-columns: repeat(2, 1fr); gap: 24px 14px; } .front .t { font-size: 1.05rem; } .front { padding: 12px 10px 14px 16px; } .back { padding: 12px 10px 12px 14px; } .back .bd { font-size: .74rem; } }
+html { color-scheme: light; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <p class="label">Roxanne Bonanno · Clases individuales</p>
+    <h1>Aprender <span class="en">inglés</span> o <span class="es">castellano</span>, de a dos.</h1>
+    <p class="sub-en">Learn English or Spanish with a guide beside you.</p>
+    <p class="lead">Clases pensadas para una sola persona. No es un instituto: es un vínculo real entre profesora y alumno, con una guía que te ayuda a entender cómo funciona el idioma.</p>
+    <div class="cta-row">
+      <a class="btn btn-wa" href="https://wa.me/5492614675178?text=Hola%2C%20quiero%20consultar%20por%20las%20clases%20de%20idiomas" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      <a class="btn btn-ghost" href="#biblioteca">Ver la biblioteca</a>
+    </div>
+  </header>
+
+  <section class="method" aria-labelledby="m-t">
+    <h2 id="m-t">Cada alumno es distinto, y la clase también.</h2>
+    <div class="points">
+      <div class="point">
+        <h3>Un vínculo único</h3>
+        <p>Se trabaja de forma individual. La relación entre profesora y alumno es especial y es lo que ayuda a aprender.</p>
+      </div>
+      <div class="point">
+        <h3>Tus necesidades primero</h3>
+        <p>Cada persona llega con objetivos y tiempos propios. La clase se arma a partir de lo que vos necesitás.</p>
+      </div>
+      <div class="point">
+        <h3>Entender el idioma</h3>
+        <p>Una guía en la lingüística básica del idioma, para que no solo repitas frases sino que sepas por qué se dicen así.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="library" id="biblioteca" aria-labelledby="l-t">
+    <div class="lib-head">
+      <p class="label">Biblioteca · Library</p>
+      <h2 id="l-t">Libros para leer y escuchar en clase.</h2>
+      <p>Leemos en castellano y en inglés, con historias de misterio y de fantasmas. Algunos también están en audiolibro.</p>
+    </div>
+    <div class="shelf" id="shelf"></div>
+    <p class="hint">Tocá un libro para abrirlo.</p>
+  </section>
+
+  <section class="contact" id="contacto" aria-labelledby="c-t">
+    <p class="label">Contacto</p>
+    <h2 id="c-t">Comunicate para consultar por las clases.</h2>
+    <p>Escribime por WhatsApp, contame qué querés aprender y armamos el plan juntos.</p>
+    <div class="num-row">
+      <span class="num">261 467-5178</span>
+      <button class="copy" id="copy" type="button">Copiar número</button>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn-wa" href="https://wa.me/5492614675178?text=Hola%2C%20quiero%20consultar%20por%20las%20clases%20de%20idiomas" target="_blank" rel="noopener">Abrir WhatsApp</a>
+    </div>
+  </section>
+  <footer>Roxanne Bonanno · Clases de inglés y castellano · Mendoza, Argentina</footer>
+</div>
+
+<script>
+const BOOKS = [
+  { title: "Sherlock Holmes", author: "Arthur Conan Doyle", bg: "#1b3a6b", fg: "#f4ecd2", accent: "#e8c36a", icon: "lens",
+    desc: "Casos de detectives y deducción, ideales para practicar vocabulario y comprensión.", audio: true },
+  { title: "Agatha Christie", author: "Novelas de misterio", bg: "#6b1f2a", fg: "#f6e9e6", accent: "#f0b8a8", icon: "cup",
+    desc: "Misterios clásicos para leer despacio y comentar cada pista en clase.", audio: true },
+  { title: "El fantasma de Canterville", sub: "The Canterville Ghost", author: "Oscar Wilde", bg: "#2c3e50", fg: "#e9f0f5", accent: "#bcd3e6", icon: "ghost",
+    desc: "Un fantasma, una mansión inglesa y mucho humor. Una lectura divertida.", audio: false },
+  { title: "Vecinos asesinos", author: "", bg: "#2f5d4a", fg: "#eaf5ee", accent: "#b9e0c8", icon: "houses",
+    desc: "Una historia de suspenso entre vecinos, para leer en castellano y en inglés.", audio: false }
+];
+const ICONS = {
+  lens: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" aria-hidden="true"><circle cx="42" cy="42" r="26"/><line x1="61" y1="61" x2="88" y2="88"/></svg>',
+  cup: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 38h46v22a18 18 0 0 1-18 18h-10a18 18 0 0 1-18-18z"/><path d="M66 44h8a9 9 0 0 1 0 18h-8"/><path d="M34 26c0-6 8-6 8-12M50 26c0-6 8-6 8-12"/></svg>',
+  ghost: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 86V44a26 26 0 0 1 52 0v42l-9-8-9 8-8-8-8 8-9-8z"/><circle cx="40" cy="44" r="3" fill="currentColor"/><circle cx="60" cy="44" r="3" fill="currentColor"/></svg>',
+  houses: '<svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 82V50l20-18 20 18v32z"/><path d="M52 82V50l20-18 20 18v32z"/><rect x="22" y="58" width="12" height="12"/><rect x="66" y="58" width="12" height="12"/></svg>'
+};
+const shelf = document.getElementById("shelf");
+BOOKS.forEach((b, i) => {
+  const btn = document.createElement("button");
+  btn.className = "book"; btn.type = "button"; btn.setAttribute("aria-expanded", "false");
+  btn.setAttribute("aria-label", "Abrir " + b.title);
+  btn.style.setProperty("--cv-bg", b.bg); btn.style.setProperty("--cv-fg", b.fg); btn.style.setProperty("--cv-accent", b.accent);
+  const subLine = b.sub ? '<span class="a">' + b.sub + '</span>' : '';
+  const authorLine = b.author ? '<span class="a">' + b.author + '</span>' : '';
+  btn.innerHTML =
+    '<span class="inner">' +
+      '<span class="face front"><span class="tag">Inglés · Castellano</span>' + ICONS[b.icon] +
+        '<span class="t">' + b.title + '</span>' + (b.sub ? subLine : authorLine) + (b.sub ? authorLine : '') + '</span>' +
+      '<span class="face back"><span class="bt">' + b.title + '</span>' +
+        (b.author ? '<span class="ba">' + b.author + '</span>' : '') +
+        '<span class="bd">' + b.desc + '</span>' +
+        '<span class="chips"><span class="chip en">English</span><span class="chip es">Castellano</span>' + (b.audio ? '<span class="chip au">Audiolibro</span>' : '') + '</span>' +
+      '</span>' +
+    '</span>';
+  btn.addEventListener("click", () => {
+    const open = btn.getAttribute("aria-expanded") === "true";
+    btn.setAttribute("aria-expanded", open ? "false" : "true");
+  });
+  shelf.appendChild(btn);
+});
+
+const copyBtn = document.getElementById("copy");
+copyBtn.addEventListener("click", () => {
+  const done = () => { copyBtn.textContent = "Número copiado"; setTimeout(() => copyBtn.textContent = "Copiar número", 2000); };
+  try {
+    navigator.clipboard.writeText("261 467-5178").then(done, () => {
+      const r = document.createRange(); r.selectNodeContents(document.querySelector(".num"));
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    });
+  } catch (e) {
+    const r = document.createRange(); r.selectNodeContents(document.querySelector(".num"));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+});
+</script>
+</body>
+</html>
